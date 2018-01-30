@@ -23,3 +23,36 @@ it confirms that at least one match is found - which is a pass!
 ```
     Froth.checkDisplayed("Android Espresso");
 ```
+
+## click(String viewString)
+
+Click the view that is an exact match for viewString.
+
+```
+    Froth.click("Edit");
+```
+
+## click(int id)
+
+Click the view that matches the resource id.
+
+```
+    Froth.click(R.id.edit_destinations);
+```
+
+## checkToast(String toast)
+
+Check that a toast is displayed that contains specified string.
+
+```
+    Froth.checkDisplayed("Congratulations on installing Pointy Arrow");
+```
+
+## openOptionsMenu()
+
+Open the overflow or options menu.
+
+```
+    Froth.openOptionsMenu();
+```
+
