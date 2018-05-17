@@ -1,8 +1,10 @@
-package qarj.pointyarrow;
+package qarj.listyshop;
 
 import android.support.test.espresso.AmbiguousViewMatcherException;
 import android.support.test.espresso.NoMatchingViewException;
 import android.view.View;
+
+import junit.framework.AssertionFailedError;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -30,12 +32,49 @@ public class Froth {
     // Project Home: https://github.com/Qarj/Froth
 
     public static void checkDisplayed(String expected) {
-        try {
-            onView(withText(containsString(expected))).check(matches(isDisplayed()));
-        } catch  (AmbiguousViewMatcherException e ) {
-            // really don't care how many times it is found - it is still a pass
+        boolean found = _isTextDisplayedInMainContent(expected);
+        if (!found) {
+            found = _isTextDisplayedInAHint(expected);
+        }
+        if (!found) {
+            assertTrue("checkDisplayed [" + expected + "] was not found", false);
         }
     }
+
+    private static boolean _isTextDisplayedInMainContent(String expected) {
+        try {
+            onView(withText(containsString(expected))).check(matches(isDisplayed()));
+            return true;
+        } catch  (AmbiguousViewMatcherException e ) {
+            // really don't care how many times it is found - it is still a pass
+            return true;
+        } catch (NoMatchingViewException | AssertionFailedError e) {
+            // oh dear!
+        }
+        return false;
+    }
+
+    private static boolean _isTextDisplayedInAHint(String expected) {
+        try {
+            onView(withHint(containsString(expected))).check(matches(isDisplayed()));
+            return true;
+        } catch  (AmbiguousViewMatcherException e ) {
+            // really don't care how many times it is found - it is still a pass
+            return true;
+        } catch (NoMatchingViewException | AssertionFailedError e) {
+            // oh dear!
+        }
+        return false;
+    }
+
+    public static boolean isVisible(String target) {
+        boolean found = _isTextDisplayedInMainContent(target);
+        if (!found) {
+            found = _isTextDisplayedInAHint(target);
+        }
+        return found;
+    }
+
 
     public static void click(String viewString) {
         onView(allOf(withText(viewString), isDisplayed())).perform(android.support.test.espresso.action.ViewActions.click());
